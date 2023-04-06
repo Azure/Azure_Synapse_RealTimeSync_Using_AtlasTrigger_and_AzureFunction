@@ -22,11 +22,8 @@ In this lab we will use “sample_mflix.movies” namespace from the sample data
 You will need the below set up before starting the Lab:
 - **MongoDB Atlas cluster setup:** 
   
-  Register for a new Atlas account [here](https://www.mongodb.com/docs/atlas/tutorial/create-atlas-account/#register-a-new-service-account). 
-  
-  Follow steps from 1 to 4 (*Create an Atlas account*, *Deploy a free cluster*, *Add your IP to the IP access list* and *Create Database user*) to set up  
-  the Atlas environment.
-  
+  Register for a new Atlas account [here](https://www.mongodb.com/docs/atlas/tutorial/create-atlas-account/#register-a-new-service-account).   
+  Follow steps from 1 to 4 (*Create an Atlas account*, *Deploy a free cluster*, *Add your IP to the IP access list* and *Create Database user*) to set up  the Atlas environment.   
   Also, follow step 7 “*Load Sample Data*” to load sample data to be used in the lab.
   
 ![Picture 2](https://user-images.githubusercontent.com/104025201/230300219-6f95d9be-616f-4267-8cce-e4d3af5d1411.png)
@@ -34,11 +31,10 @@ You will need the below set up before starting the Lab:
 
   **Note: For this lab, add “0.0.0.0/0” to the IP access list so that Synapse can connect to MongoDB Atlas. In production scenarios, It is recommended to use Private link or VNET peering instead of the IP whitelisting.**
   
-- **Azure account setup:**
-  
+- **Azure account setup:**.  
   Follow link [here](https://azure.microsoft.com/en-in/free/) to set up a free azure account
  
-- **Azure Synapse Analytics workspace setup:**
+- **Azure Synapse Analytics workspace setup:**   
   Follow link [here](https://learn.microsoft.com/en-us/azure/synapse-analytics/get-started-create-workspace) to set up a Synapse workspace within you Azure account
 
 ### Integration Steps:
@@ -47,10 +43,10 @@ You will need the below set up before starting the Lab:
 
    Go to Azure account, search for Storage Accounts and select your default ADLS Gen2 storage associated with your Synapse workspace (“*labmdbsynapseadls*” in the example). You can always check the ADLS Gen2 account name and the default container name in your Synapse workspace, under “*Data*” tile on left and under the “*Linked*” tab.
    
-    - Note down the default container under “*Containers*” under the “*Data storage*” section. (“*defaultprimary*” in the example)
-    - You can create a directory under this Container or just give a name of your choice and the code will create it. (“*newcreate*” in the example)
-    - Give any name for the storage_file_name (“*labsynapse*” in the example)
-    - Go to the “*Access keys*” tab under “*Security + networking*” and copy one of the access keys.
+   - Note down the default container under “*Containers*” under the “*Data storage*” section. (“*defaultprimary*” in the example)
+   - You can create a directory under this Container or just give a name of your choice and the code will create it. (“*newcreate*” in the example)
+   - Give any name for the storage_file_name (“*labsynapse*” in the example)
+   - Go to the “*Access keys*” tab under “*Security + networking*” and copy one of the access keys.
 
 <img width="452" alt="Picture 3" src="https://user-images.githubusercontent.com/104025201/230335335-76916e1d-77b1-49a1-b9b7-0f1c930074f6.png">
 
