@@ -16,10 +16,9 @@ This simple solution uses [Atlas triggers](https://www.mongodb.com/docs/atlas/ap
 2. MongoDB function writes the changes captured to Azure functions.
 3. Azure function writes the data to synapse ADLS gen2.
 
-In this lab we will use “sample_mflix.movies” namespace from the sample dataset as source for the change stream data. Thus, any changes made into this collection will add a blog in the Synapse ADLS gen2 storage.
+In this exercise, we will use “sample_mflix.movies” namespace from the sample dataset as source for the change stream data. Thus, any changes made into this collection will add a blog in the Synapse ADLS gen2 storage.
 
-### Prerequisites:
-You will need the below set up before starting the Lab:
+### Prerequisites:   
 - **MongoDB Atlas cluster setup:** 
   
   Register for a new Atlas account [here](https://www.mongodb.com/docs/atlas/tutorial/create-atlas-account/#register-a-new-service-account).   
