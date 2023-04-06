@@ -119,16 +119,16 @@ Save all this information in a notepad as :
 <img width="452" alt="Picture 4" src="https://user-images.githubusercontent.com/104025201/230351875-180d03cf-5c82-46e1-b228-820520c9777c.png">
 
 
-  **iv.** Add the storage related parameters to the Application Settings section under the Function App on Azure. Right click on “Application Settings” and select “Add New Setting”. Enter the new setting name and value when prompted. Add all the 5 storage account related values saved in Step [Fetch ADLS Gen2 Storage Details](https://docs.google.com/document/d/1n1ppHjSjbU-Rn-QtUvIVXHwmScdS6xfcejoVnID4JnQ/edit#heading=h.74dcpfke4uzb)  to the Application Settings.
+  **iv.** Add the storage related parameters to the Application Settings section under the Function App on Azure. Right click on “*Application Settings*” and select “*Add New Setting*”. Enter the new setting name and value when prompted. Add all the 5 storage account related values saved in Step [Fetch ADLS Gen2 Storage Details](https://docs.google.com/document/d/1n1ppHjSjbU-Rn-QtUvIVXHwmScdS6xfcejoVnID4JnQ/edit#heading=h.74dcpfke4uzb)  to the Application Settings.
 
   ![Picture 5](https://user-images.githubusercontent.com/104025201/230347931-ebd1d66a-10ee-42a2-9e6a-1aed4cb26592.png)
   
-  **v.** Deploy the application again by repeating step 4. This time look out for the deployment success message on the bottom right and select the “Upload settings”. This will update the newly added settings. 
+  **v.** Deploy the application again by repeating step 4. This time look out for the deployment success message on the bottom right and select the “*Upload settings*”. This will update the newly added settings. 
 
 ![Picture 6](https://user-images.githubusercontent.com/104025201/230348257-3ff54005-493f-4ecf-9aa6-006a271fcaad.png)
 
-   You can verify the settings by going to the Azure function and checking the “Configuration”  
-   tab under the “Settings” section.
+   You can verify the settings by going to the Azure function and checking the “*Configuration*”  
+   tab under the “*Settings*” section.
    
  ![Picture 7](https://user-images.githubusercontent.com/104025201/230348513-c941a71f-d26b-4343-9780-442d0c091f3d.png)
  
@@ -136,26 +136,25 @@ Save all this information in a notepad as :
 
 ![Picture 8](https://user-images.githubusercontent.com/104025201/230348744-627d5ca0-1102-4615-ab96-876afb16a205.png)
 
-  You can also get the function url by navigating to the function in Azure and selecting “Get 
-  Function Url”.
+  You can also get the function url by navigating to the function in Azure and selecting “*Get Function Url*”.
   
 ![Picture 9](https://user-images.githubusercontent.com/104025201/230349002-abfff2e9-54c8-45aa-84ec-0ddd36ffad1b.png)
 
 2. **Set Up Atlas Trigger**
   
-  **i.** Select “Triggers” tile under “SERVICES” on the left of the Atlas UI. This will open the Trigger Homepage. Select the “Add Trigger” button on the top right to create a new trigger for our movies collection.
+  **i.** Select “*Triggers*” tile under “*SERVICES*” on the left of the Atlas UI. This will open the Trigger Homepage. Select the “*Add Trigger*” button on the top right to create a new trigger for our movies collection.
   
   ![Picture 10](https://user-images.githubusercontent.com/104025201/230365556-f393c737-d2fe-40e3-95ff-e588b5c949e2.png)
 
-  **ii.** Let the default “Database Trigger” remain so, give a name for the trigger (LabSynapse in the example). Link the “Sandbox” cluster. Don't change any other settings.
+  **ii.** Let the default “*Database Trigger*” remain so, give a name for the trigger (*LabSynapse* in the example). Link the “*Sandbox*” cluster. Don't change any other settings.
   
   ![Picture 11](https://user-images.githubusercontent.com/104025201/230365615-fe3e2082-8354-4f3d-ac88-584c26a16093.png)
 
-  **iii.** Under “TRIGGER SOURCE DETAILS”, Select the “Cluster Name” as “Sandbox” “Database Name” as “sample_mflix” and select the “Collection Name” as “movies”. Select the Operation Type as “Insert” and also Select the “Full Document” option.
+  **iii.** Under “*TRIGGER SOURCE DETAILS*”, Select the “*Cluster Name*” as “*Sandbox*”, “*Database Name*” as “*sample_mflix*” and select the “*Collection Name*” as “*movies*”. Select the Operation Type as “*Insert*” and also Select the “*Full Document*” option.
   
 ![Picture 12](https://user-images.githubusercontent.com/104025201/230365652-7f40426d-5a1f-4cc4-84c9-3ff5d4ab21af.png)
 
-  **iv.** Let the “Select An Event Type” option under “FUNCTION” remain selected as “Function”. Remove all the sample code and paste the below code in the box.
+  **iv.** Let the “*Select An Event Type*” option under “*FUNCTION*” remain selected as “_Function_”. Remove all the sample code and paste the below code in the box.
 
 ```
     exports =  function(changeEvent) {  
@@ -173,31 +172,31 @@ Save all this information in a notepad as :
 };
 ```
 
-**Note**: The url needs to be replaced with your Azure function url from Step 6 of Set Up Azure Function
+**Note**: The url needs to be replaced with your Azure function url from Step 6 of [Set Up Azure Function](**vi.** Note the Azure function url from the deployment logs)
 
 ![Picture 13](https://user-images.githubusercontent.com/104025201/230365858-ffb65c0d-d177-4da4-91cc-0944a1b8db39.png)
 
-  **v.** Click “Save” at the bottom to Save the newly created Trigger. Once Saved, going back to Triggers Home page we can see our newly added Trigger.
+  **v.** Click “*Save*” at the bottom to Save the newly created Trigger. Once Saved, going back to Triggers Home page we can see our newly added Trigger.
 
-Now that the Trigger is enabled, it will watch the movies collection for any “Insert” operations and trigger our Azure function in the event of the insertion of a document.
+Now that the Trigger is enabled, it will watch the *movies* collection for any “*Insert*” operations and trigger our Azure function in the event of the insertion of a document.
   
   ![Picture 14](https://user-images.githubusercontent.com/104025201/230365975-2f6a2c69-ef69-45b9-a889-2069238eccb9.png)
   
 3. **Test Real Time Sync**
   
-  **i.** Go to Atlas “Database” (on left menu) and “Browse Collections” against your cluster (Sandbox in the example) and navigate to the “movies” collection the “sample_mflix” database and select “Insert Document” to insert a document.
+  **i.** Go to Atlas “*Database*” (on left menu) and “*Browse Collections*” against your cluster (Sandbox in the example) and navigate to the “movies” collection the “*sample_mflix*” database and select “*Insert Document*” to insert a document.
   
 ![Picture 15](https://user-images.githubusercontent.com/104025201/230376003-704676d3-4d5e-43ed-b4ab-77b0038b91ee.png)
 
-  **ii.** Copy the below json into the json structure input view “{}” and click “Insert” button.
+  **ii.** Copy the below json into the json structure input view “{}” and click “*Insert*” button.
 
 ```
 {"plot":"This  is a test plot.","genres":["Short"],"runtime":1,"cast":["test actor","test actor1"],"num_mflix_comments":0,"title":"Test Movie","fullplot":"This is a test movie and thus no full plot.","countries":["USA"],"released":{"$date":-2418768000000},"directors":["Test Directors"],"rated":"UNRATED","awards":{"wins":1,"nominations":0,"text":"1 win."},"lastupdated":"2015-08-26 00:03:50.133000000","year":1890,"imdb":{"rating":6.2,"votes":1189,"id":5},"type":"movie","tomatoes":{"viewer":{"rating":3.0,"numReviews":184,"meter":32},"lastUpdated":{"$date":1435516449000}}}
 ```
 <img width="380" alt="Picture 16" src="https://user-images.githubusercontent.com/104025201/230376088-67cd0a8e-ada0-445a-8e7c-1b45171ee818.png">
 
-**iii.** Once the document is inserted , you can check in Synapse workspace, Data -> Linked -> Azure Data lake Storage Gen2. You should see a new folder created (newcreate in the example) and a file with the name starting with the file name given in the storage settings in the VS Code (labsynapse in the example).
-Click on the document, it will download on your local machine. Verify that it is the new document we had added to the movies collection.
+**iii.** Once the document is inserted , you can check in Synapse workspace, Data -> Linked -> Azure Data lake Storage Gen2. You should see a new folder created (_newcreate_ in the example) and a file with the name starting with the file name given in the storage settings in the VS Code (_labsynapse_ in the example).
+Click on the document, it will download on your local machine. Verify that it is the new document we had added to the _movies_ collection.
 
 ![Picture 17](https://user-images.githubusercontent.com/104025201/230376196-523ffb33-712a-4bbf-8cee-23d242567c05.png)
 
