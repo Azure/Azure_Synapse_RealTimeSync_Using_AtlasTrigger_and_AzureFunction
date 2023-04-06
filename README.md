@@ -141,3 +141,47 @@ Save all this information in a notepad as :
   
 ![Picture 9](https://user-images.githubusercontent.com/104025201/230349002-abfff2e9-54c8-45aa-84ec-0ddd36ffad1b.png)
 
+2. **Set Up Atlas Trigger**
+  
+  **i.** Select “Triggers” tile under “SERVICES” on the left of the Atlas UI. This will open the Trigger Homepage. Select the “Add Trigger” button on the top right to create a new trigger for our movies collection.
+  
+  ![Picture 10](https://user-images.githubusercontent.com/104025201/230365556-f393c737-d2fe-40e3-95ff-e588b5c949e2.png)
+
+  **ii.** Let the default “Database Trigger” remain so, give a name for the trigger (LabSynapse in the example). Link the “Sandbox” cluster. Don't change any other settings.
+  
+  ![Picture 11](https://user-images.githubusercontent.com/104025201/230365615-fe3e2082-8354-4f3d-ac88-584c26a16093.png)
+
+  **iii.** Under “TRIGGER SOURCE DETAILS”, Select the “Cluster Name” as “Sandbox” “Database Name” as “sample_mflix” and select the “Collection Name” as “movies”. Select the Operation Type as “Insert” and also Select the “Full Document” option.
+  
+![Picture 12](https://user-images.githubusercontent.com/104025201/230365652-7f40426d-5a1f-4cc4-84c9-3ff5d4ab21af.png)
+
+  **iv.** Let the “Select An Event Type” option under “FUNCTION” remain selected as “Function”. Remove all the sample code and paste the below code in the box.
+
+```
+    exports =  function(changeEvent) {  
+    const fullDocument = changeEvent.fullDocument;
+
+    // Invoke Azure function inserting the change stream into ADLS gen2
+
+    console.log(typeof fullDocument);
+    const response =  context.http.post({
+      url: "https://<azure_functon_url>.azurewebsites.net/api/<azure_functon_url>http",
+      body: fullDocument,
+      encodeBodyAsJSON: true
+    });
+    return response;
+};
+```
+
+**Note**: The url needs to be replaced with your Azure function url from Step 6 of Set Up Azure Function
+
+![Picture 13](https://user-images.githubusercontent.com/104025201/230365858-ffb65c0d-d177-4da4-91cc-0944a1b8db39.png)
+
+  **v.** Click “Save” at the bottom to Save the newly created Trigger. Once Saved, going back to Triggers Home page we can see our newly added Trigger.
+
+Now that the Trigger is enabled, it will watch the movies collection for any “Insert” operations and trigger our Azure function in the event of the insertion of a document.
+  
+  ![Picture 14](https://user-images.githubusercontent.com/104025201/230365975-2f6a2c69-ef69-45b9-a889-2069238eccb9.png)
+
+
+
