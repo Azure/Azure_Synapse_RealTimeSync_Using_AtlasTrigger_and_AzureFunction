@@ -37,7 +37,11 @@ You will need the below set up before starting the Lab:
 - **Azure Synapse Analytics workspace setup:**   
   Follow link [here](https://learn.microsoft.com/en-us/azure/synapse-analytics/get-started-create-workspace) to set up a Synapse workspace within you Azure account
 
-### Integration Steps:
+### Integration Steps:   
+  1. [Fetch ADLS Gen2 storage details](#fetch-adls-gen2-storage-details)  
+  2. [Set Up Azure Function](#set-up-azure-function)
+  3. [Set Up Atlas Trigger](#set-up-atlas-trigger)
+  4. [Test Real Time Sync](#test-real-time-sync)
 
 #### Fetch ADLS Gen2 storage details 
 
