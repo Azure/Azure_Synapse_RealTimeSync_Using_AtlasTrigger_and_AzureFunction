@@ -43,7 +43,7 @@ You will need the below set up before starting the Lab:
 
 ### Integration Steps:
 
-1. **Fetch ADLS Gen2 storage details** 
+#### Fetch ADLS Gen2 storage details 
 
    Go to Azure account, search for Storage Accounts and select your default ADLS Gen2 storage associated with your Synapse workspace (“*labmdbsynapseadls*” in the example). You can always check the ADLS Gen2 account name and the default container name in your Synapse workspace, under “*Data*” tile on left and under the “*Linked*” tab.
    
@@ -62,11 +62,11 @@ Save all this information in a notepad as :
     storage_directory = newcreate                                                                             
     storage_file_name = labsynapse
   
-  2. **Set Up Azure Function**
+#### Set Up Azure Function
   
   **i.** Create an HTTP triggered function app using [Visual Studio Code](https://learn.microsoft.com/en-us/azure/azure-functions/create-first-function-vs-code-python?pivots=python-mode-configuration) or [command line](https://learn.microsoft.com/en-us/azure/azure-functions/create-first-function-cli-python?tabs=azure-cli%2Cbash&pivots=python-mode-configuration).
 
-  Replace the sample code with the below code in “__init__.py”:
+  Replace the sample code with the below code in “\_\_init\_\_.py”:
 
   ```
     import json
@@ -119,7 +119,7 @@ Save all this information in a notepad as :
 <img width="452" alt="Picture 4" src="https://user-images.githubusercontent.com/104025201/230351875-180d03cf-5c82-46e1-b228-820520c9777c.png">
 
 
-  **iv.** Add the storage related parameters to the Application Settings section under the Function App on Azure. Right click on “*Application Settings*” and select “*Add New Setting*”. Enter the new setting name and value when prompted. Add all the 5 storage account related values saved in Step [Fetch ADLS Gen2 Storage Details](https://docs.google.com/document/d/1n1ppHjSjbU-Rn-QtUvIVXHwmScdS6xfcejoVnID4JnQ/edit#heading=h.74dcpfke4uzb)  to the Application Settings.
+  **iv.** Add the storage related parameters to the Application Settings section under the Function App on Azure. Right click on “*Application Settings*” and select “*Add New Setting*”. Enter the new setting name and value when prompted. Add all the 5 storage account related values saved in Step [Fetch ADLS Gen2 Storage Details](#fetch-adls-gen2-storage-details) to the Application Settings.
 
   ![Picture 5](https://user-images.githubusercontent.com/104025201/230347931-ebd1d66a-10ee-42a2-9e6a-1aed4cb26592.png)
   
@@ -140,7 +140,7 @@ Save all this information in a notepad as :
   
 ![Picture 9](https://user-images.githubusercontent.com/104025201/230349002-abfff2e9-54c8-45aa-84ec-0ddd36ffad1b.png)
 
-2. **Set Up Atlas Trigger**
+#### Set Up Atlas Trigger
   
   **i.** Select “*Triggers*” tile under “*SERVICES*” on the left of the Atlas UI. This will open the Trigger Homepage. Select the “*Add Trigger*” button on the top right to create a new trigger for our movies collection.
   
@@ -172,7 +172,7 @@ Save all this information in a notepad as :
 };
 ```
 
-**Note**: The url needs to be replaced with your Azure function url from Step 6 of [Set Up Azure Function](**vi.** Note the Azure function url from the deployment logs)
+**Note**: The url needs to be replaced with your Azure function url from Step 6 of [Set Up Azure Function](#set-up-azure-function)
 
 ![Picture 13](https://user-images.githubusercontent.com/104025201/230365858-ffb65c0d-d177-4da4-91cc-0944a1b8db39.png)
 
@@ -182,7 +182,7 @@ Now that the Trigger is enabled, it will watch the *movies* collection for any �
   
   ![Picture 14](https://user-images.githubusercontent.com/104025201/230365975-2f6a2c69-ef69-45b9-a889-2069238eccb9.png)
   
-3. **Test Real Time Sync**
+#### Test Real Time Sync
   
   **i.** Go to Atlas “*Database*” (on left menu) and “*Browse Collections*” against your cluster (Sandbox in the example) and navigate to the “movies” collection the “*sample_mflix*” database and select “*Insert Document*” to insert a document.
   
