@@ -103,14 +103,14 @@ Save all this information in a notepad as :
   ```   
   
       
-  **ii.** Add the below to the *requirements.txt* file which already has *azure-functions*
+  **ii.** Add the below to the "*requirements.txt*" file which already has *azure-functions*
       
   ```
   azure-identity                                                                                                    
   Azure-storage-file-datalake
   ```
   
-  **iii.** Deploy the local project from Workspace Local to Azure. Select the upload to cloud icon and select the *Deploy to Function App* option. It will prompt you to select the Function App name on the top bar. Once  selected, you can see the deployment progress in the OUTPUT window of the terminal.
+  **iii.** Deploy the local project from Workspace Local to Azure. Select the upload to cloud icon and select the "*Deploy to Function App*" option. It will prompt you to select the Function App name on the top bar. Once  selected, you can see the deployment progress in the OUTPUT window of the terminal.
 
 <img width="452" alt="Picture 4" src="https://user-images.githubusercontent.com/104025201/230351875-180d03cf-5c82-46e1-b228-820520c9777c.png">
 
@@ -138,7 +138,7 @@ Save all this information in a notepad as :
 
 #### Set Up Atlas Trigger
   
-  **i.** Select “*Triggers*” tile under “*SERVICES*” on the left of the Atlas UI. This will open the Trigger Homepage. Select the “*Add Trigger*” button on the top right to create a new trigger for our movies collection.
+  **i.** Select “*Triggers*” tile under “*SERVICES*” on the left of the Atlas UI. This will open the Trigger Homepage. Select the “*Add Trigger*” button on the top right to create a new trigger for our *movies* collection.
   
   ![Picture 10](https://user-images.githubusercontent.com/104025201/230365556-f393c737-d2fe-40e3-95ff-e588b5c949e2.png)
 
@@ -168,7 +168,7 @@ Save all this information in a notepad as :
 };
 ```
 
-**Note**: The url needs to be replaced with your Azure function url from Step 6 of [Set Up Azure Function](#set-up-azure-function)
+**Note: The url needs to be replaced with your Azure function url from Step 6 of [Set Up Azure Function](#set-up-azure-function)**
 
 ![Picture 13](https://user-images.githubusercontent.com/104025201/230365858-ffb65c0d-d177-4da4-91cc-0944a1b8db39.png)
 
