@@ -54,59 +54,90 @@ You will need the below set up before starting the Lab:
 
 <img width="452" alt="Picture 3" src="https://user-images.githubusercontent.com/104025201/230335335-76916e1d-77b1-49a1-b9b7-0f1c930074f6.png">
 
-Save all this information in a notepad as : -                                                                
-  storage_account_name = labmdbsynapseadls                                                              
-  storage_account_key = &lt; *your access key* &gt;                                                                
-  storage_container = defaultprimary                                                                      
-  storage_directory = newcreate                                                                             
-  storage_file_name = labsynapse
+Save all this information in a notepad as :
+
+    storage_account_name = labmdbsynapseadls                                                              
+    storage_account_key =  <your access key>                                                              
+    storage_container = defaultprimary                                                                      
+    storage_directory = newcreate                                                                             
+    storage_file_name = labsynapse
   
-  1. **Set Up Azure Function** 
-     1. Create an HTTP triggered function app using [Visual Studio Code](https://learn.microsoft.com/en-us/azure/azure-functions/create-first-function-vs-code-python?pivots=python-mode-configuration) or [command line](https://learn.microsoft.com/en-us/azure/azure-functions/create-first-function-cli-python?tabs=azure-cli%2Cbash&pivots=python-mode-configuration).
-
-Replace the sample code with the below code in “__init__.py”:
-```
-import json
-import logging
-import os
-import azure.functions as func
-from azure.identity import DefaultAzureCredential
-from azure.storage.filedatalake import DataLakeServiceClient
-
-
-def main(req: func.HttpRequest) -> func.HttpResponse:
-   logging.info('Python HTTP trigger function processed a new request.')
-   logging.info(req)
-   storage_account_name = os.environ["storage_account_name"]
-   storage_account_key = os.environ["storage_account_key"]
-   storage_container = os.environ["storage_container"]
-   storage_directory = os.environ["storage_directory"]
-   storage_file_name = os.environ["storage_file_name"]
-   service_client = DataLakeServiceClient(account_url="{}://{}.dfs.core.windows.net".format(
-           "https", storage_account_name), credential=storage_account_key)
-   #object_id = req.get_body().__getitem__(0)
-   json_data = req.get_body()
-   logging.info(json_data)
-   object_id = "test"
-   try:
-       json_string = json_data.decode("utf-8")
-       json_object = json.loads(json_string)
-       object_id = json_object["_id"]["$oid"]
-       logging.info(object_id)
-   except Exception as e:
-       logging.info("Exception occurred : "+ str(e))   
-   file_system_client = service_client.get_file_system_client(file_system=storage_container)
-   directory_client = file_system_client.get_directory_client(storage_directory)
-   file_client = directory_client.create_file(storage_file_name + "-" + str(object_id) + ".txt")
-   file_client.append_data(data=json_data, offset=0, length=len(json_data))
-   file_client.flush_data(len(json_data))
-   return func.HttpResponse(f"This HTTP triggered function executed successfully.")
-   ```
-
+  2. **Set Up Azure Function**
   
+  **i.** Create an HTTP triggered function app using [Visual Studio Code](https://learn.microsoft.com/en-us/azure/azure-functions/create-first-function-vs-code-python?pivots=python-mode-configuration) or [command line](https://learn.microsoft.com/en-us/azure/azure-functions/create-first-function-cli-python?tabs=azure-cli%2Cbash&pivots=python-mode-configuration).
+
+  Replace the sample code with the below code in “__init__.py”:
+
+  ```
+    import json
+    import logging
+    import os
+    import azure.functions as func
+    from azure.identity import DefaultAzureCredential
+    from azure.storage.filedatalake import DataLakeServiceClient
+
+
+    def main(req: func.HttpRequest) -> func.HttpResponse:
+      logging.info('Python HTTP trigger function processed a new request.')
+      logging.info(req)
+      storage_account_name = os.environ["storage_account_name"]
+      storage_account_key = os.environ["storage_account_key"]
+      storage_container = os.environ["storage_container"]
+      storage_directory = os.environ["storage_directory"]
+      storage_file_name = os.environ["storage_file_name"]
+      service_client = DataLakeServiceClient(account_url="{}://{}.dfs.core.windows.net".format(
+              "https", storage_account_name), credential=storage_account_key)
+      #object_id = req.get_body().__getitem__(0)
+      json_data = req.get_body()
+      logging.info(json_data)
+      object_id = "test"
+      try:
+          json_string = json_data.decode("utf-8")
+          json_object = json.loads(json_string)
+          object_id = json_object["_id"]["$oid"]
+          logging.info(object_id)
+      except Exception as e:
+          logging.info("Exception occurred : "+ str(e))   
+      file_system_client = service_client.get_file_system_client(file_system=storage_container)
+      directory_client = file_system_client.get_directory_client(storage_directory)
+      file_client = directory_client.create_file(storage_file_name + "-" + str(object_id) + ".txt")
+      file_client.append_data(data=json_data, offset=0, length=len(json_data))
+      file_client.flush_data(len(json_data))
+      return func.HttpResponse(f"This HTTP triggered function executed successfully.")
+  ```   
   
+      
+  **ii.** Add the below to the *requirements.txt* file which already has *azure-functions*
+      
+  ```
+  azure-identity                                                                                                    
+  Azure-storage-file-datalake
+  ```
+  
+  **iii.** Deploy the local project from Workspace Local to Azure. Select the upload to cloud icon and select the *Deploy to Function App* option. It will prompt you to select the Function App name on the top bar. Once  selected, you can see the deployment progress in the OUTPUT window of the terminal.
+
+<img width="452" alt="Picture 4" src="https://user-images.githubusercontent.com/104025201/230351875-180d03cf-5c82-46e1-b228-820520c9777c.png">
 
 
+  **iv.** Add the storage related parameters to the Application Settings section under the Function App on Azure. Right click on “Application Settings” and select “Add New Setting”. Enter the new setting name and value when prompted. Add all the 5 storage account related values saved in Step [Fetch ADLS Gen2 Storage Details](https://docs.google.com/document/d/1n1ppHjSjbU-Rn-QtUvIVXHwmScdS6xfcejoVnID4JnQ/edit#heading=h.74dcpfke4uzb)  to the Application Settings.
 
+  ![Picture 5](https://user-images.githubusercontent.com/104025201/230347931-ebd1d66a-10ee-42a2-9e6a-1aed4cb26592.png)
+  
+  **v.** Deploy the application again by repeating step 4. This time look out for the deployment success message on the bottom right and select the “Upload settings”. This will update the newly added settings. 
 
+![Picture 6](https://user-images.githubusercontent.com/104025201/230348257-3ff54005-493f-4ecf-9aa6-006a271fcaad.png)
+
+   You can verify the settings by going to the Azure function and checking the “Configuration”  
+   tab under the “Settings” section.
+   
+ ![Picture 7](https://user-images.githubusercontent.com/104025201/230348513-c941a71f-d26b-4343-9780-442d0c091f3d.png)
+ 
+  **vi.** Note the Azure function url from the deployment logs 
+
+![Picture 8](https://user-images.githubusercontent.com/104025201/230348744-627d5ca0-1102-4615-ab96-876afb16a205.png)
+
+  You can also get the function url by navigating to the function in Azure and selecting “Get 
+  Function Url”.
+  
+![Picture 9](https://user-images.githubusercontent.com/104025201/230349002-abfff2e9-54c8-45aa-84ec-0ddd36ffad1b.png)
 
