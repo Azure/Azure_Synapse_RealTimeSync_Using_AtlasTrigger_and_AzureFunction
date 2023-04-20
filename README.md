@@ -163,7 +163,7 @@ Save all this information in a notepad as :
 
     console.log(typeof fullDocument);
     const response =  context.http.post({
-      url: "https://<azure_functon_url>.azurewebsites.net/api/<azure_functon_url>http",
+      url: "https://<azure_functon_url>.azurewebsites.net/api/<azure_functon_url>",
       body: fullDocument,
       encodeBodyAsJSON: true
     });
