@@ -162,15 +162,13 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
   **iv.** Let the “*Select An Event Type*” option under “*FUNCTION*” remain selected as “_Function_”. Remove all the sample code and paste the below code in the box.
 
 ```
-    exports =  function(changeEvent) {  
-    const fullDocument = changeEvent.fullDocument;
+exports =  function(changeEvent) {
 
     // Invoke Azure function inserting the change stream into ADLS gen2
-
     console.log(typeof fullDocument);
     const response =  context.http.post({
-      url: "https://<azure_function_url>.azurewebsites.net/api/<azure_function_name>",
-      body: fullDocument,
+      url: "<azure function url",
+      body: changeEvent,
       encodeBodyAsJSON: true
     });
     return response;
