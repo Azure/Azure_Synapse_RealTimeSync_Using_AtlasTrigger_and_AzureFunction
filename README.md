@@ -4,12 +4,10 @@ Azure Synapse is used by multiple customers as a one stop solution for their ana
 
 MongoDB has both a [Source and Sink connector](https://learn.microsoft.com/en-us/azure/data-factory/connector-mongodb?tabs=data-factory) for Synapse pipelines which enables fetching data from MongoDB or loading data into MongoDB in batches/ micro batches.
 
-However, currently there is no CDC connector for MongoDB in Synapse to keep the Synapse dedicated SQL pools synced with MongoDB data in real time. To facilitate real time analytics, MongoDB with Microsoft provided a custom solution and gave it as a few clicks and configuration based deployment as detailed [here](https://learn.microsoft.com/en-us/azure/architecture/example-scenario/analytics/azure-synapse-analytics-integrate-mongodb-atlas). There is however still a need to provide a more seamless integration for real time sync from MongoDB to Synapse. MongoDB Atlas Trigger and Azure function can be combined to help here.
+To facilitate real time analytics, MongoDB with Microsoft provided a custom solution and gave it as a few clicks and configuration based deployment as detailed [here](https://learn.microsoft.com/en-us/azure/architecture/example-scenario/analytics/azure-synapse-analytics-integrate-mongodb-atlas).MongoDB Atlas Trigger and Azure function based solution here provides a more seamless integration for real time sync from MongoDB to Synapse.
 
 ## Solution Overview:
 This simple solution uses [Atlas triggers](https://www.mongodb.com/docs/atlas/app-services/triggers/) and [functions](https://www.mongodb.com/docs/atlas/app-services/functions/) which abstracts the code needed to set up change streams and take an action based on the change detected.
-
-![Picture 1](https://user-images.githubusercontent.com/104025201/230293199-a7acbd10-1a42-42e8-9491-f1dc0e5fd096.png)
 
 ### Workflow:
 1. Set up a change stream on one of the collections using MongoDB Triggers.
@@ -24,8 +22,8 @@ In this exercise, we will use “sample_mflix.movies” namespace from the sampl
   Register for a new Atlas account [here](https://www.mongodb.com/docs/atlas/tutorial/create-atlas-account/#register-a-new-service-account).   
   Follow steps from 1 to 4 (*Create an Atlas account*, *Deploy a free cluster*, *Add your IP to the IP access list* and *Create Database user*) to set up  the Atlas environment.   
   Also, follow step 7 “*Load Sample Data*” to load sample data to be used in the lab.
-  
-![Picture 2](https://user-images.githubusercontent.com/104025201/230300219-6f95d9be-616f-4267-8cce-e4d3af5d1411.png)
+
+![AtlasReg](images/AtlasRegistration1.png)
 
 
   **Note: For this lab, add “0.0.0.0/0” to the IP access list so that Synapse can connect to MongoDB Atlas. In production scenarios, It is recommended to use Private link or VNET peering instead of the IP whitelisting.**
@@ -51,7 +49,7 @@ In this exercise, we will use “sample_mflix.movies” namespace from the sampl
    - Give any name for the storage_file_name (“*labsynapse*” in the example)
    - Go to the “*Access keys*” tab under “*Security + networking*” and copy one of the access keys.
 
-<img width="452" alt="Picture 3" src="https://user-images.githubusercontent.com/104025201/230335335-76916e1d-77b1-49a1-b9b7-0f1c930074f6.png">
+![AzureStorageAcc](images/AzureStorageAccount.png)
 
 Save all this information in a notepad as :
 
@@ -65,7 +63,7 @@ Save all this information in a notepad as :
   
   **i.** Create an HTTP triggered function app using [Visual Studio Code](https://learn.microsoft.com/en-us/azure/azure-functions/create-first-function-vs-code-python?pivots=python-mode-configuration) or [command line](https://learn.microsoft.com/en-us/azure/azure-functions/create-first-function-cli-python?tabs=azure-cli%2Cbash&pivots=python-mode-configuration).
 
-  Replace the sample code with the below code in “\_\_init\_\_.py”:
+  Replace the sample code for HTTP trigger with the below code in “function_app.py”:
 
   ```
 import json
@@ -121,43 +119,34 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
   
   **iii.** Deploy the local project from Workspace Local to Azure. Select the upload to cloud icon and select the "*Deploy to Function App*" option. It will prompt you to select the Function App name on the top bar. Once  selected, you can see the deployment progress in the OUTPUT window of the terminal.
 
-<img width="452" alt="Picture 4" src="https://user-images.githubusercontent.com/104025201/230351875-180d03cf-5c82-46e1-b228-820520c9777c.png">
+![VSCodeDeploy](https://user-images.githubusercontent.com/104025201/230351875-180d03cf-5c82-46e1-b228-820520c9777c.png)
 
 
-  **iv.** Add the storage related parameters to the Application Settings section under the Function App on Azure. Right click on “*Application Settings*” and select “*Add New Setting*”. Enter the new setting name and value when prompted. Add all the 5 storage account related values saved in Step [Fetch ADLS Gen2 Storage Details](#fetch-adls-gen2-storage-details) to the Application Settings.
+  **iv.** Add the storage related parameters to the Application Settings section under the Function App on Azure. Right click on “*Application Settings*” and select “*Add New Setting*”. Enter the new setting name and value when prompted. Add all the 5 storage account related values saved in Step [Fetch ADLS Gen2 Storage Details](#fetch-adls-gen2-storage-details) to the Application Settings. After adding all 5 new settings,click on “*Upload Local Settings*” to upload these settings to the Azure function app.
 
-  ![Picture 5](https://user-images.githubusercontent.com/104025201/230347931-ebd1d66a-10ee-42a2-9e6a-1aed4cb26592.png)
+<img src="images/SettingsFcn.png" width="700" height="500" />
   
-  **v.** Deploy the application again by repeating step 4. This time look out for the deployment success message on the bottom right and select the “*Upload settings*”. This will update the newly added settings. 
-
-![Picture 6](https://user-images.githubusercontent.com/104025201/230348257-3ff54005-493f-4ecf-9aa6-006a271fcaad.png)
-
-   You can verify the settings by going to the Azure function and checking the “*Configuration*”  
+  **v.** Deploy the application again by repeating step 3. You can verify the settings by going to the Azure function and checking the “*Configuration*”  
    tab under the “*Settings*” section.
    
- ![Picture 7](https://user-images.githubusercontent.com/104025201/230348513-c941a71f-d26b-4343-9780-442d0c091f3d.png)
+![Picture 7](images/FcnConfig1.png) 
+
  
-  **vi.** Note the Azure function url from the deployment logs 
-
-![Picture 8](https://user-images.githubusercontent.com/104025201/230348744-627d5ca0-1102-4615-ab96-876afb16a205.png)
-
-  You can also get the function url by navigating to the function in Azure and selecting “*Get Function Url*”.
+  **vi.** Note the Azure function url from the deployment logs. You can also get the function url by navigating to the function in Azure and selecting “*Get Function Url*”.
   
-![Picture 9](https://user-images.githubusercontent.com/104025201/230349002-abfff2e9-54c8-45aa-84ec-0ddd36ffad1b.png)
+![Picture 9](images/FcnUrl.png)
+
 
 #### Set Up Atlas Trigger
   
   **i.** Select “*Triggers*” tile under “*SERVICES*” on the left of the Atlas UI. This will open the Trigger Homepage. Select the “*Add Trigger*” button on the top right to create a new trigger for our *movies* collection.
-  
-  ![Picture 10](https://user-images.githubusercontent.com/104025201/230365556-f393c737-d2fe-40e3-95ff-e588b5c949e2.png)
 
-  **ii.** Let the default “*Database Trigger*” remain so, give a name for the trigger (*LabSynapse* in the example). Link the “*Sandbox*” cluster. Don't change any other settings.
+ ![Picture 10](images/AtlasTriggers1.png)
   
-  ![Picture 11](https://user-images.githubusercontent.com/104025201/230365615-fe3e2082-8354-4f3d-ac88-584c26a16093.png)
 
-  **iii.** Under “*TRIGGER SOURCE DETAILS*”, Select the “*Cluster Name*” as “*Sandbox*”, “*Database Name*” as “*sample_mflix*” and select the “*Collection Name*” as “*movies*”. Select the Operation Type as “*Insert*” and also Select the “*Full Document*” option.
-  
-![Picture 12](https://user-images.githubusercontent.com/104025201/230365652-7f40426d-5a1f-4cc4-84c9-3ff5d4ab21af.png)
+  **ii.** Let the default Trigger Type of “*Database Trigger*” remain so, give a name for the trigger (*LabSynapse* in the example). Link the “*Sandbox*” cluster under "*Link Data Source(s)*". Don't change any other settings under "*TRIGGER DETAILS*" section.
+
+  **iii.** Under “*TRIGGER SOURCE DETAILS*”, Select the “*Cluster Name*” as “*Sandbox*”, “*Database Name*” as “*sample_mflix*” and select the “*Collection Name*” as “*movies*”. Select the Operation Type as “*Insert Document*”, “*Update Document*” and “*Delete Document*”. Also Select the “*Full Document*” and "*Document Preimage*" options.
 
   **iv.** Let the “*Select An Event Type*” option under “*FUNCTION*” remain selected as “_Function_”. Remove all the sample code and paste the below code in the box.
 
@@ -175,33 +164,26 @@ exports =  function(changeEvent) {
 };
 ```
 
-**Note: The url needs to be replaced with your Azure function url from Step 6 of [Set Up Azure Function](#set-up-azure-function)**
-
-![Picture 13](https://user-images.githubusercontent.com/104025201/230365858-ffb65c0d-d177-4da4-91cc-0944a1b8db39.png)
+**Note: The url needs to be replaced with your Azure function url from "Step vi" of [Set Up Azure Function](#set-up-azure-function)**
 
   **v.** Click “*Save*” at the bottom to Save the newly created Trigger. Once Saved, going back to Triggers Home page we can see our newly added Trigger.
 
-Now that the Trigger is enabled, it will watch the *movies* collection for any “*Insert*” operations and trigger our Azure function in the event of the insertion of a document.
-  
-  ![Picture 14](https://user-images.githubusercontent.com/104025201/230365975-2f6a2c69-ef69-45b9-a889-2069238eccb9.png)
+Now that the Trigger is enabled, it will watch the *movies* collection for any “*Insert*”, “*Update*” or “*Delete*” operations and trigger our Azure function in the event of the insertion of a document.
   
 #### Test Real Time Sync
   
-  **i.** Go to Atlas “*Database*” (on left menu) and “*Browse Collections*” against your cluster (Sandbox in the example) and navigate to the “movies” collection the “*sample_mflix*” database and select “*Insert Document*” to insert a document.
-  
-![Picture 15](https://user-images.githubusercontent.com/104025201/230376003-704676d3-4d5e-43ed-b4ab-77b0038b91ee.png)
+  **i.** Go to Atlas “*Database*” (on left menu) and “*Browse Collections*” against your cluster (Sandbox in the example) and navigate to the “movies” collection the “*sample_mflix*” database and select “*Insert Document*” button on right side to insert a document.
 
   **ii.** Copy the below json into the json structure input view “{}” and click “*Insert*” button.
 
 ```
 {"plot":"This  is a test plot.","genres":["Short"],"runtime":1,"cast":["test actor","test actor1"],"num_mflix_comments":0,"title":"Test Movie","fullplot":"This is a test movie and thus no full plot.","countries":["USA"],"released":{"$date":-2418768000000},"directors":["Test Directors"],"rated":"UNRATED","awards":{"wins":1,"nominations":0,"text":"1 win."},"lastupdated":"2015-08-26 00:03:50.133000000","year":1890,"imdb":{"rating":6.2,"votes":1189,"id":5},"type":"movie","tomatoes":{"viewer":{"rating":3.0,"numReviews":184,"meter":32},"lastUpdated":{"$date":1435516449000}}}
 ```
-<img width="380" alt="Picture 16" src="https://user-images.githubusercontent.com/104025201/230376088-67cd0a8e-ada0-445a-8e7c-1b45171ee818.png">
 
 **iii.** Once the document is inserted , you can check in Synapse workspace, Data -> Linked -> Azure Data lake Storage Gen2. You should see a new folder created (_newcreate_ in the example) and a file with the name starting with the file name given in the storage settings in the VS Code (_labsynapse_ in the example).
 Click on the document, it will download on your local machine. Verify that it is the new document we had added to the _movies_ collection.
 
-![Picture 17](https://user-images.githubusercontent.com/104025201/230376196-523ffb33-712a-4bbf-8cee-23d242567c05.png)
+![Picture 17](images/SynapseADLS.png)
 
 **Congratulations ! You have successfully created the solution to capture changes in a collection using Atlas triggers and copy the changes to ADLS Gen2 within Synapse using Azure function.**
 
